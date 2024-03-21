@@ -65,3 +65,27 @@ document.addEventListener('DOMContentLoaded', function () {
       });
   });
 });
+
+
+function cancelarRegistro() {
+  window.location.href = '/iniciarSesion';
+}
+
+function visualizarFoto(event) {
+  imagenProducto = document.getElementById('imagenProducto');
+  
+  if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+          // Actualizar la fuente de la imagen con los datos del archivo seleccionado
+          imagenProducto.src = e.target.result;
+      }
+
+      // Leer el archivo como una URL de datos
+      reader.readAsDataURL(event.target.files[0]);
+  } else {
+      // Si no se seleccionó ningún archivo, establecer la fuente de la imagen como vacía
+      imagenProducto.src = '';
+  }
+}

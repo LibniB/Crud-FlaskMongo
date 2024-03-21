@@ -8,35 +8,53 @@ import threading
 def vistaIniciarSesion():  
     return render_template('frmIniciarSesion.html')
 
-@app.route('/iniciarSesion', methods=['POST'])
+# @app.route('/iniciarSesion', methods=['GET','POST'])
+# def iniciarSesion():
+#     mensaje = None
+#     estado = False
+#     if request.method == 'POST':
+#         try:
+#             usuario = request.form['txtUser']
+#             password = request.form['txtPassword']  # Assuming a password field exists
+#             # Validate credentials against your user database
+#             if validate_credentials(usuario, password):
+#                 estado = True
+#                 mensaje = "Inicio de sesión exitoso!"
+#             else:
+#                 mensaje = "Usuario o contraseña incorrectos."
+#         except KeyError:
+#             mensaje = "Falta información en el formulario."
+#     return render_template('frmIniciarSesion.html', mensaje=mensaje, estado=estado)
+@app.route('/iniciarSesion', methods=['GET','POST'])
 def iniciarSesion():  
     mensaje = None
     estado = False
-    try:
-        usuario = request.form['txtUser']
-        password = request.form['txtPassword']
-        datosConsulta = {"usuario": usuario, "password": password}
-        print(datosConsulta)
-        user = usuarios.find_one(datosConsulta)
-        if (user):
-            session['user']=usuario
-            email = yagmail.SMTP("libnibernate@gmail.com", open(".password").read(), encoding='UTF-8')
-            asunto = 'Reporte de ingreso al sistema de usuario'
-            mensaje = f"Se informa que el usuario <b>'{user["nombres"]} {user["apellidos"]}'</b> ha ingresado al sistema"  # Corrección en la interpolación de cadenas
-           
+    if request.method == 'POST':
+        try:
+            usuario = request.form['txtUser']
+            password = request.form['txtPassword']
+            datosConsulta = {"usuario": usuario, "password": password}
+            print(datosConsulta)
+            user = usuarios.find_one(datosConsulta)
+            if (user):
+                session['user']=usuario
+                email = yagmail.SMTP("libnibernate@gmail.com", open(".password").read(), encoding='UTF-8')
+                asunto = 'Reporte de ingreso al sistema de usuario'
+                mensaje = f"Se informa que el usuario <b>'{user["nombres"]} {user["apellidos"]}'</b> ha ingresado al sistema"  # Corrección en la interpolación de cadenas
             
-            thread = threading.Thread(target=enviarCorreo, args=(email, ["libnibernate@gmail.com" , user [ 'correo' ]], asunto, mensaje ))
-            thread. start()
-            estado = True
+                
+                thread = threading.Thread(target=enviarCorreo, args=(email, ["libnibernate@gmail.com" , user [ 'correo' ]], asunto, mensaje ))
+                thread. start()
+                estado = True
 
-            return redirect("/listarProductos")  
-        else:
-            mensaje = 'Credenciales no válidas'
+                return redirect("/listarProductos")  
+            else:
+                mensaje = 'Credenciales no válidas'
+                
+                
+        except pymongo.errors.PyMongoError as error:  
+            mensaje = error
             
-            
-    except pymongo.errors.PyMongoError as error:  
-        mensaje = error
-        
     return render_template('frmIniciarSesion.html', estado=estado, mensaje=mensaje)
 
 #funcion que envia el correo
@@ -84,5 +102,7 @@ def vistaRegistro():
 
 @app.route('/cerrarSesion')
 def cerrarSesion():
+    
     session.pop('user', None)
+    session.clear
     return redirect(url_for('inicio'))

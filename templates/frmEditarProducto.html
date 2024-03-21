@@ -26,10 +26,15 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label for="fileFoto" class="fw-bold">Foto:</label>
-                <input type="file" name="fileFoto" id="fileFoto" class="form-control">
+                <label class="fw-bold" for="fileFoto">Foto(jpg):</label>
+                <input type="file" name="fileFoto" id="fileFoto" onchange="visualizarFoto(event)"  
+                class="form-control"  accept=".jpg" required >
+            </div>
+            <div class="mb-3 text-center">
+                <img id="imagenProducto" width="100" height="100">
             </div>
             <button type="submit" class="btn btn-primary">Actualizar</button>
+            <a href="/listarProductos"><button type="button" class="btn btn-warning">Cancelar</button></a>
         </form>
 </div>
 {% endblock %}
