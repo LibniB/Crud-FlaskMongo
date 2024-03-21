@@ -1,18 +1,3 @@
-async function visualizarFoto(evento) {
-  const files = evento.target.files;
-  const archivo = files[0];
-  let filename = archivo.name;
-  let extension = filename.split(".").pop();
-  extension = extension.tolowerCase();
-  if (extension !== "jpg") {
-    evento.target.value = "";
-    swal.fire("Seleccionar", "La imagen debe ser en formato JPG", "warning");
-  } else {
-    const objectURL = URL.createObjectURL(archivo);
-    imagenProducto.setAttribute("src", objectURL);
-  }
-}
-
 //ventana emergente de confirmacion para eliminar producto.
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -49,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
           const productId = this.getAttribute('data-id');
 
-          // Mostrar la ventana de confirmación
           Swal.fire({
               title: '¿Estás seguro de querer editar este producto?',
               icon: 'warning',
@@ -71,6 +55,7 @@ function cancelarRegistro() {
   window.location.href = '/iniciarSesion';
 }
 
+// funcion para visualizar la foto
 function visualizarFoto(event) {
   imagenProducto = document.getElementById('imagenProducto');
   
@@ -78,14 +63,12 @@ function visualizarFoto(event) {
       var reader = new FileReader();
 
       reader.onload = function (e) {
-          // Actualizar la fuente de la imagen con los datos del archivo seleccionado
           imagenProducto.src = e.target.result;
       }
 
       // Leer el archivo como una URL de datos
       reader.readAsDataURL(event.target.files[0]);
   } else {
-      // Si no se seleccionó ningún archivo, establecer la fuente de la imagen como vacía
       imagenProducto.src = '';
   }
 }
