@@ -8,23 +8,6 @@ import threading
 def vistaIniciarSesion():  
     return render_template('frmIniciarSesion.html')
 
-# @app.route('/iniciarSesion', methods=['GET','POST'])
-# def iniciarSesion():
-#     mensaje = None
-#     estado = False
-#     if request.method == 'POST':
-#         try:
-#             usuario = request.form['txtUser']
-#             password = request.form['txtPassword']  # Assuming a password field exists
-#             # Validate credentials against your user database
-#             if validate_credentials(usuario, password):
-#                 estado = True
-#                 mensaje = "Inicio de sesión exitoso!"
-#             else:
-#                 mensaje = "Usuario o contraseña incorrectos."
-#         except KeyError:
-#             mensaje = "Falta información en el formulario."
-#     return render_template('frmIniciarSesion.html', mensaje=mensaje, estado=estado)
 @app.route('/iniciarSesion', methods=['GET','POST'])
 def iniciarSesion():  
     mensaje = None
